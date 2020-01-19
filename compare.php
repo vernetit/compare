@@ -1,7 +1,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>compare 3d</title>
+  <title>Compare 3d - Train your focus!</title>
+
+    <link rel="icon" href="favicon.jpg" type="image/jpg"/>
+    <link rel="shortcut icon" href="favicon.jpg" type="image/jpg" />
+    
+    <meta name="description" content="Train your focus">
+    <meta name="keywords" content="brain training, focus, mental training, atention"> 
+
   <script src='js/jquery.min.js'></script>   
   <script src="js/underscore-min.js"></script>
   <script src="js/aframe-master.min.js"></script>
@@ -25,15 +32,20 @@
 <body>
 <input type="button" value="start" onclick="play(0);" style="/*display:none;*/">
 velocity
-<select id="myVel" onchange="" style="">   
+<select id="myVel" onchange="" style="">
+</select>
+difference
+<select id="myDif" onchange="" style="">      
 </select>
 
 <script type="text/javascript">
 
 for(i=1;i<150;i++){
-  sel="";
+  sel=""; selDif="";
   if(i==5) sel="selected";
   $("#myVel").append(`<option value="${i}" ${sel}>${i}</option>`)
+  if(i==1) selDif="selected";
+  $("#myDif").append(`<option value="${i}" ${selDif}>${i}</option>`)
 
 }  
 
@@ -43,10 +55,12 @@ for(i=1;i<150;i++){
   <option value="2">fixed velocity</option>
 </select>
 <b>What sphere flash at more speed left or right? Use arrow keys to answer. (App for desktop Pc)</b>
-<a href="#" onclick="alert('This App is experimental and may contain errors\n robertchalean@gmail.com 2020')" style="float:right;">[?]</a>
+<a href="#" onclick="alert('This App is experimental and may contain errors\n https://github.com/vernetit/compare \n robertchalean@gmail.com 2020')" style="float:right;">[?]</a>
 <div id="stats" style="float:right;"></div>
 <br>
-<a-scene id="myScene" onclick="" style="z-index: 100;"> </a-scene>
+<a-scene id="myScene" onclick="" style="z-index: 100;"> 
+
+</a-scene>
 
 <script type="text/javascript">
 
@@ -71,18 +85,28 @@ ok=0;
 pasadas=0;
 typeVel=1;
 
+iniDif=0;
+
 function play(x){
 
   if(x==0){
+
+    $("#stats").html("");
 
     arrayElement=[];
     error=0;
     ok=0;
     pasadas=0;
+    
 
     currentVelocity=parseInt($("#myVel").val());
-    
     typeVel=parseInt($("#typeVel").val());
+    iniDif=parseInt($("#myDif").val());
+
+    if( (currentVelocity-iniDif)<3 ) iniDif=1;
+
+
+    diferencia=iniDif;
 
     t_ini = 0;
     t_fin = 0;
@@ -90,11 +114,15 @@ function play(x){
     t_total = 0;
     t_promedio = 0;
 
+    actualiza();
+
   }
 
   palabra=[];
 
   sentido=_.random(0,1)
+
+  if(currentVelocity<=1) currentVelocity=2; 
 
   if(sentido){
     palabra[0]=currentVelocity;
@@ -173,7 +201,7 @@ function actualiza(){
     error:${error}&nbsp;|&nbsp;
     v:${currentVelocity}&nbsp;|&nbsp;
     d:${diferencia}&nbsp;|&nbsp;
-    t:${t_promedio}
+    t:${t_promedio}&nbsp;
   `);
 }
 
@@ -206,7 +234,7 @@ $(document).keydown(function(e) {
 
           if(sentido){
             ok++;
-            diferencia=1;
+            diferencia=iniDif;
             if(ok%3==0 && ok!=0){  
               if(typeVel==1) currentVelocity++;
             } 
@@ -255,7 +283,7 @@ $(document).keydown(function(e) {
             flash("red");
           }else{
             ok++;
-            diferencia=1;
+            diferencia=iniDif;
             if(ok%3==0 && ok!=0)
             {
               if(typeVel==1) currentVelocity++;
